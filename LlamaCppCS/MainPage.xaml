@@ -3,8 +3,9 @@
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 			 x:Class="LlamaCppChat.MainPage">
 
-	<Grid>
+	<Grid Padding="20" RowSpacing="10" ColumnSpacing="10">
 		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="*"/>
 			<RowDefinition Height="Auto"/>
@@ -13,30 +14,45 @@
 			<ColumnDefinition/>
 			<ColumnDefinition/>
 		</Grid.ColumnDefinitions>
+		<Grid Grid.Row="0" Grid.ColumnSpan="2" ColumnSpacing="10">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="Auto"/>
+			</Grid.ColumnDefinitions>
+			<Label Text="Selezionare il file del modello da caricare"/>
+			<Label x:Name="ModelPath" Grid.Column="1" BackgroundColor="LightGray" 
+				   HorizontalOptions="FillAndExpand"/>
+			<Button x:Name="SelectModel" Grid.Column="2" Text="Seleziona modello" Clicked="SelectModel_Clicked"/>
+			<Button x:Name="LoadModel" Grid.Column="3" Text="Carica modello" Clicked="LoadModel_Clicked"/>
+			<Button x:Name="UnloadModel" Grid.Column="4" Text="Scarica modello" Clicked="UnloadModel_Clicked"/>
+		</Grid>
 		<Label
-			Grid.Row="0"
+			Grid.Row="1"
 			Grid.Column="0"
 			Text="Utente"
 			HorizontalOptions="Center" />
 		<Entry
 			x:Name="UserRequest"
-			Grid.Row="0"
+			Grid.Row="1"
 			Grid.Column="1"/>
 
 		<Label
-			Grid.Row="1"
+			Grid.Row="2"
 			Grid.Column="0"
 			Text="Assistente"
 			HorizontalOptions="Center" />
 		<Label
 			x:Name="AssistantResponse"
-			Grid.Row="1"
+			Grid.Row="2"
 			Grid.Column="1"
 			Background="LightGray"/>
 
 		<Button
 			x:Name="SubmitComplete"
-			Grid.Row="2"
+			Grid.Row="3"
 			Grid.Column="0"
 			Text="Invia (Completo)" 
 			Clicked="SubmitComplete_Clicked"
@@ -44,7 +60,7 @@
 
 		<Button
 			x:Name="SubmitStreaming"
-			Grid.Row="2"
+			Grid.Row="3"
 			Grid.Column="1"
 			Text="Invia (Streaming)" 
 			Clicked="SubmitStreaming_Clicked"

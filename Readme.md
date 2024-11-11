@@ -28,6 +28,7 @@ Per avviarlo con un formato di prompt specifico:
 python -m llama_cpp.server --model PATH_TO_GGUF_MODEL --chat_format chatml
 
 # Progetto LlamaCppPy
+
 Nel file [README](https://github.com/abetlen/llama-cpp-python?tab=readme-ov-file) del progetto llama-cpp-python si dice che è possibile installare la libreria specificando il backend da usare.
 Per esempio:
 pip install llama-cpp-python -C cmake.args="-DGGML_BLAS=ON;-DGGML_BLAS_VENDOR=OpenBLAS"
@@ -73,7 +74,9 @@ RuntimeError: Failed to load shared library 'PATH_TO_ENV\lib\site-packages\llama
 ```
 
 ## Progetto LlamaCppCS
-Il progetto non compila, dando costantemente l'errore
+
+Installando sia il pacchetto "LLamaSharp" che il pacchetto "LLamaSharp.Backend.Cpu" si ha il seguente errore di compilazione:
+
 NETSDK1152: Found multiple publish output files with the same relative path
 
 È un problema di LlamaSharp, tracciato nella issue [382](https://github.com/SciSharp/LLamaSharp/issues/382) del loro repository.
@@ -161,3 +164,36 @@ Forse i file duplicati potrebbero essere rimossi così:
   </ItemGroup>
 ```
 Ma non funziona...
+
+Installando solo "LLamaSharp" si ha il seguente errore:
+
+```
+System.TypeInitializationException
+  HResult=0x80131534
+  Messaggio=The type initializer for 'LLama.Native.NativeApi' threw an exception.
+  Origine=<Non è possibile valutare l'origine dell'eccezione>
+  Analisi dello stack:
+<Non è possibile valutare l'analisi dello stack dell'eccezione>
+
+  Questa eccezione è stata generata in origine nello stack di chiamate seguente:
+    [Codice esterno]
+
+Eccezione interna 1:
+RuntimeError: The native library cannot be correctly loaded. It could be one of the following reasons: 
+1. No LLamaSharp backend was installed. Please search LLamaSharp.Backend and install one of them. 
+2. You are using a device with only CPU but installed cuda backend. Please install cpu backend instead. 
+3. One of the dependency of the native library is missed. Please use `ldd` on linux, `dumpbin` on windows and `otool`to check if all the dependency of the native library is satisfied. Generally you could find the libraries under your output folder.
+4. Try to compile llama.cpp yourself to generate a libllama library, then use `LLama.Native.NativeLibraryConfig.WithLibrary` to specify it at the very beginning of your code. For more information about compilation, please refer to LLamaSharp repo on github.
+```
+
+Si possono prendere i file ggml.dll, llama.dll e llava_shared.dll 
+dalla cartella `bin\Debug\.nuget\packages\llamasharp.backend.cpu\0.19.0\runtimes\win-x64\native` 
+e metterli in una cartella del progetto (in questo caso in LlamaCppCPU) ed includerli nella progetto come "Contenuti".
+È anche necessario specificare queste opzioni:
+
+    NativeLibraryConfig.All.WithAvx(AvxLevel.None);
+    NativeLibraryConfig.All.WithCuda(false);
+    NativeLibraryConfig.All.WithVulkan(false);
+    NativeLibraryConfig.All.WithLibrary(".\\LlamaCppCPU\\llama.dll", ".\\LlamaCppCPU\\llava.dll");
+
+Queste opzioni indicano che non si vuole usare le istruzioni AVX, CUDA e Vulkan e che la libreria nativa è in una cartella specifica.
