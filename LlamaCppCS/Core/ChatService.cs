@@ -96,9 +96,11 @@ namespace LlamaCppCS.Core {
 
 			ChatSession session = new(executor, messages);
 
+			var chatMessage = new ChatHistory.Message(AuthorRole.User, message);
+			chatHistory.AddMessage(AuthorRole.User, message);
+
 			// Generate the response streamingly and aggregate the generated texts.
 			string response = "";
-			var chatMessage = new ChatHistory.Message(AuthorRole.User, message);
 			await foreach (var text in session.ChatAsync(chatMessage, inferenceParams)) {
 				System.Diagnostics.Debug.WriteLine(text);
 				response += text;
@@ -120,9 +122,11 @@ namespace LlamaCppCS.Core {
 
 			ChatSession session = new(executor, messages);
 
+			var chatMessage = new ChatHistory.Message(AuthorRole.User, message);
+			chatHistory.AddMessage(AuthorRole.User, message);
+
 			// Generate the response streamingly.
 			string response = "";
-			var chatMessage = new ChatHistory.Message(AuthorRole.User, message);
 			await foreach (var text in session.ChatAsync(chatMessage, inferenceParams)) {
 				System.Diagnostics.Debug.WriteLine(text);
 				response += text;
