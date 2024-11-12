@@ -90,17 +90,16 @@ namespace LlamaCppCS.Core {
 				return await Task.FromResult("");
 			}
 
-			ChatSession session = new(executor, chatHistory);
-
-			chatHistory.AddMessage(AuthorRole.User, message);
-
 			ChatHistory messages = new ChatHistory();
 			messages.AddMessage(AuthorRole.System, SYSTEM_MESSAGE);
 			messages.Messages.AddRange(chatHistory.Messages);
 
+			ChatSession session = new(executor, messages);
+
 			// Generate the response streamingly and aggregate the generated texts.
 			string response = "";
-			await foreach (var text in session.ChatAsync(messages, inferenceParams)) {
+			var chatMessage = new ChatHistory.Message(AuthorRole.User, message);
+			await foreach (var text in session.ChatAsync(chatMessage, inferenceParams)) {
 				System.Diagnostics.Debug.WriteLine(text);
 				response += text;
 			}
@@ -115,17 +114,16 @@ namespace LlamaCppCS.Core {
 				yield break;
 			}
 
-			ChatSession session = new(executor, chatHistory);
-
-			chatHistory.AddMessage(AuthorRole.User, message);
-
 			ChatHistory messages = new ChatHistory();
 			messages.AddMessage(AuthorRole.System, SYSTEM_MESSAGE);
 			messages.Messages.AddRange(chatHistory.Messages);
 
+			ChatSession session = new(executor, messages);
+
 			// Generate the response streamingly.
 			string response = "";
-			await foreach (var text in session.ChatAsync(messages, inferenceParams)) {
+			var chatMessage = new ChatHistory.Message(AuthorRole.User, message);
+			await foreach (var text in session.ChatAsync(chatMessage, inferenceParams)) {
 				System.Diagnostics.Debug.WriteLine(text);
 				response += text;
 				yield return response;
@@ -135,60 +133,3 @@ namespace LlamaCppCS.Core {
 		}
 	}
 }
-
-//this.config = config;
-//this.serverUrl = this.config["ServerUrl"];
-//this.client = new OllamaApiClient(this.serverUrl);
-//this.chatHistory = new List<Message>() {
-//								new Message {
-//									Role = ChatRole.System,
-//									Content = "Ciao! Come posso aiutarti?"
-//								}
-//							};
-
-//internal async Task<string> SendMessageAsync(string message) {
-
-//	chatHistory.Add(new Message {
-//		Role = ChatRole.User,
-//		Content = message
-//	});
-
-//	var request = new ChatRequest {
-//		Model = MODEL_ID,
-//		Stream = false,
-//		Messages = chatHistory
-//	};
-
-//	var response = await client.Chat(request).StreamToEnd();
-
-//	chatHistory.Add(new Message {
-//		Role = ChatRole.Assistant,
-//		Content = message
-//	});
-
-//	return response.Message.Content;
-//}
-
-//internal async IAsyncEnumerable<string> SendMessageStreamAsync(string message) {
-
-//	chatHistory.Add(new Message {
-//		Role = ChatRole.User,
-//		Content = message
-//	});
-
-//	var request = new ChatRequest {
-//		Model = MODEL_ID,
-//		Stream = true,
-//		Messages = chatHistory
-//	};
-
-//	await foreach (var response in client.Chat(request)) {
-//		yield return response.Message.Content;
-//	}
-
-//	chatHistory.Add(new Message {
-//		Role = ChatRole.Assistant,
-//		Content = message
-//	});
-//}
-
