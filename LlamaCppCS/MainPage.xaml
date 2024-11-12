@@ -3,7 +3,7 @@
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 			 x:Class="LlamaCppChat.MainPage">
 
-	<Grid Padding="20" RowSpacing="10" ColumnSpacing="10">
+	<Grid Padding="10" RowSpacing="10" ColumnSpacing="10">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
