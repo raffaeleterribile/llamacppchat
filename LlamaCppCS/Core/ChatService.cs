@@ -68,7 +68,6 @@ namespace LlamaCppCS.Core {
 
 			// Add chat histories as prompt to tell AI how to act.
 			chatHistory.Messages.Clear();
-			chatHistory.AddMessage(AuthorRole.System, "Transcript of a dialog, where the User interacts with an Assistant named Bob. Bob is helpful, kind, honest, good at writing, and never fails to answer the User's requests immediately and with precision.");
 
 			isModelLoaded = true;
 			this.modelPath = modelPath;
