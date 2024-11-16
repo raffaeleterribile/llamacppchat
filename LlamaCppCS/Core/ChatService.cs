@@ -85,7 +85,7 @@ namespace LlamaCppCS.Core {
 			return await Task.FromResult(isModelLoaded);
 		}
 
-		internal async Task<string> SendMessageAsync(string message) {
+		internal async Task<string> SendMessageTransactionalAsync(string message) {
 			if (executor == null) {
 				return await Task.FromResult("");
 			}
@@ -111,7 +111,7 @@ namespace LlamaCppCS.Core {
 			return response;
 		}
 
-		internal async IAsyncEnumerable<string> SendMessageStreamAsync(string message) {
+		internal async IAsyncEnumerable<string> SendMessageStreamingAsync(string message) {
 			if (executor == null) {
 				yield break;
 			}

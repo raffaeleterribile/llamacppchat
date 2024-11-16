@@ -8,7 +8,7 @@ namespace LlamaCppChat {
 			InitializeComponent();
 			LoadModel.IsEnabled = false;
 			UnloadModel.IsEnabled = false;
-			SubmitComplete.IsEnabled = false;
+			SubmitTransactional.IsEnabled = false;
 			SubmitStreaming.IsEnabled = false;
 		}
 
@@ -23,7 +23,7 @@ namespace LlamaCppChat {
 
 			LoadModel.IsEnabled = true;
 			UnloadModel.IsEnabled = false;
-			SubmitComplete.IsEnabled = false;
+			SubmitTransactional.IsEnabled = false;
 			SubmitStreaming.IsEnabled = false;
 		}
 
@@ -39,7 +39,7 @@ namespace LlamaCppChat {
 			} else if (ModelPath.Text.Trim() != chatService.ModelPath) {
 				LoadModel.IsEnabled = !(await chatService.LoadModel(ModelPath.Text));
 				UnloadModel.IsEnabled = !LoadModel.IsEnabled;
-				SubmitComplete.IsEnabled = !LoadModel.IsEnabled;
+				SubmitTransactional.IsEnabled = !LoadModel.IsEnabled;
 				SubmitStreaming.IsEnabled = !LoadModel.IsEnabled;
 			}
 		}
@@ -47,21 +47,21 @@ namespace LlamaCppChat {
 		private async void UnloadModel_Clicked(object sender, EventArgs e) {
 			LoadModel.IsEnabled = !(await chatService.UnloadModel());
 			UnloadModel.IsEnabled = !LoadModel.IsEnabled;
-			SubmitComplete.IsEnabled = !LoadModel.IsEnabled;
+			SubmitTransactional.IsEnabled = !LoadModel.IsEnabled;
 			SubmitStreaming.IsEnabled = !LoadModel.IsEnabled;
 		}
 
-		async private void SubmitComplete_Clicked(object sender, EventArgs e) {
+		async private void SubmitTransactional_Clicked(object sender, EventArgs e) {
 			try {
 				UserRequest.IsEnabled = false;
-				SubmitComplete.IsEnabled = false;
+				SubmitTransactional.IsEnabled = false;
 				SubmitStreaming.IsEnabled = false;
-				AssistantResponse.Text = await chatService.SendMessageAsync(UserRequest.Text);
+				AssistantResponse.Text = await chatService.SendMessageTransactionalAsync(UserRequest.Text);
 			} catch (Exception exc) {
 				System.Diagnostics.Debug.WriteLine(exc);
 			} finally {
 				UserRequest.IsEnabled = true;
-				SubmitComplete.IsEnabled = true;
+				SubmitTransactional.IsEnabled = true;
 				SubmitStreaming.IsEnabled = true;
 			}
 		}
@@ -69,16 +69,16 @@ namespace LlamaCppChat {
 		async private void SubmitStreaming_Clicked(object sender, EventArgs e) {
 			try {
 				UserRequest.IsEnabled = false;
-				SubmitComplete.IsEnabled = false;
+				SubmitTransactional.IsEnabled = false;
 				SubmitStreaming.IsEnabled = false;
-				await foreach (string message in chatService.SendMessageStreamAsync(UserRequest.Text)) {
+				await foreach (string message in chatService.SendMessageStreamingAsync(UserRequest.Text)) {
 					AssistantResponse.Text = message;
 				}
 			} catch (Exception exc) {
 				System.Diagnostics.Debug.WriteLine(exc);
 			} finally {
 				UserRequest.IsEnabled = true;
-				SubmitComplete.IsEnabled = true;
+				SubmitTransactional.IsEnabled = true;
 				SubmitStreaming.IsEnabled = true;
 			}
 		}

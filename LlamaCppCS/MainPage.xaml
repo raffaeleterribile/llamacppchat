@@ -51,11 +51,11 @@
 			Background="LightGray"/>
 
 		<Button
-			x:Name="SubmitComplete"
+			x:Name="SubmitTransactional"
 			Grid.Row="3"
 			Grid.Column="0"
-			Text="Invia (Completo)" 
-			Clicked="SubmitComplete_Clicked"
+			Text="Invia (Transazionale)" 
+			Clicked="SubmitTransactional_Clicked"
 			HorizontalOptions="Fill" />
 
 		<Button
