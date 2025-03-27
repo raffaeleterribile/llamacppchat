@@ -7,7 +7,6 @@ client = AsyncOpenAI(
     api_key = "sk-no-key-required"
 )
 
-
 async def main():
     stream = await client.chat.completions.create(
         model="Phi-3-mini-4k-instruct-q4",
@@ -17,6 +16,5 @@ async def main():
     async for chunk in stream:
         print(chunk.choices[0].delta.content or "", end="")
     print()
-
 
 asyncio.run(main())
